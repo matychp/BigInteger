@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biginteger;
 
 import java.util.LinkedList;
@@ -27,8 +22,6 @@ public class BigInteger {
             if (Character.isDigit(letra)) {
                 String aux = "" + letra;
                 bigInt.add(Integer.parseInt(aux));
-            } else {
-                //return throw new SeEncontroUnaLetra;
             }
         }
     }
