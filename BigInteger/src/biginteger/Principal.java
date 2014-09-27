@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biginteger;
+
+import java.util.Scanner;
 
 /**
  *
@@ -11,20 +8,34 @@ package biginteger;
  */
 public class Principal {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        BigInteger unBIconString = new BigInteger("12345678987654321");
+        Scanner in = new Scanner(System.in);
+        
+        BigInteger unBIconString = new BigInteger("0000123");
         System.out.println(unBIconString.toString());
         
-        int unArreglo[] = {1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1};
+        //int unArreglo[] = {1,2,3,4,5,6,7,8,9};
+        int unArreglo[] = {0,0,0,0,0,0,0,0};
         BigInteger unBIconArreglo = new BigInteger(unArreglo);
         System.out.println(unBIconArreglo.toString());
         
-        BigInteger unBIA = new BigInteger("193857835793");
-        BigInteger unBIB = new BigInteger("092382422724");
+        /*
+        System.out.print("Ingrese la cantidad de elementos del arreglo: ");
+        int n = in.nextInt();
+        int unArregloPorTeclado[] = new int[n];
+        int i = 0;
+        while(i < unArregloPorTeclado.length){
+            System.out.println("Ingrese el numero: ");
+            int num = in.nextInt();
+            unArregloPorTeclado[i] = num;
+            i++;
+        }
+        BigInteger unBIconArregloPorTeclado = new BigInteger(unArregloPorTeclado);
+        System.out.println(unBIconArregloPorTeclado.toString());
+        //*/
+        
+        BigInteger unBIA = new BigInteger("1123");
+        BigInteger unBIB = new BigInteger("22947");
         System.out.println(unBIA.suma(unBIB));
     }
-    
 }
