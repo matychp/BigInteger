@@ -13,20 +13,20 @@ import java.util.LinkedList;
  */
 public class BigInteger {
 
-    private LinkedList<Integer> unNumero;
+    private LinkedList<Integer> bigInt;
 
     public BigInteger() {
-        unNumero = new LinkedList<>();
-        unNumero.add(0);
+        bigInt = new LinkedList<>();
+        bigInt.add(0);
     }
 
     public BigInteger(String val) {
-        unNumero = new LinkedList<>();
+        bigInt = new LinkedList<>();
 
         for (char letra : val.toCharArray()) {
             if (Character.isDigit(letra)) {
                 String aux = "" + letra;
-                unNumero.add(Integer.parseInt(aux));
+                bigInt.add(Integer.parseInt(aux));
             } else {
                 //return throw new SeEncontroUnaLetra;
             }
@@ -34,61 +34,69 @@ public class BigInteger {
     }
 
     public BigInteger(int val[]) {
-        unNumero = new LinkedList<>();
+        bigInt = new LinkedList<>();
 
         for (Integer pos : val) {
-            unNumero.add(pos);
+            bigInt.add(pos);
         }
     }
 
     public BigInteger suma(BigInteger val) {
         BigInteger auxVal = val;
-        LinkedList<Integer> auxUnNumero = unNumero;
+        LinkedList<Integer> auxThis = bigInt;
         BigInteger suma = new BigInteger();
         suma.clear();
 
-        int intVal, intNumero, intSuma;
+        int intLastVal, intLastThis, sumaParcial;
         boolean carry = false;
-        for (int i = auxVal.size(); i != 0; i--) {
-            intSuma = 0;
+        while(auxVal.size() != 0 || auxThis.size() != 0 || carry == true)
+        {
             if(carry == true){
-                intSuma += 1;
+                sumaParcial = 1;
                 carry = false;
-            }
-            intVal = auxVal.removeLast();
-            intNumero = auxUnNumero.removeLast();
-            intSuma += intVal + intNumero;
-            if (intSuma > 9) {
-                intSuma -= 10;
-                suma.addFirst(intSuma);
-                carry = true;
             }else{
-                suma.addFirst(intSuma);
+                sumaParcial = 0;
             }
+            if(auxVal.size() != 0){    
+                intLastVal = auxVal.removeLast();
+            }else{
+                intLastVal = 0;
+            }
+            if(auxThis.size() != 0){            
+                intLastThis = auxThis.removeLast();
+            }else{
+                intLastThis = 0;
+            }
+            sumaParcial += intLastVal + intLastThis;
+            if(sumaParcial >= 10){
+                sumaParcial -= 10;
+                carry = true;
+            }
+            suma.addFirst(sumaParcial);
         }
         return suma;
     }
 
     public void addFirst(int unNum) {
-        unNumero.addFirst(unNum);
+        bigInt.addFirst(unNum);
     }
 
     public void clear() {
-        unNumero.clear();
+        bigInt.clear();
     }
 
     public int size() {
-        return unNumero.size();
+        return bigInt.size();
     }
 
-    public int removeLast() {
-        return unNumero.removeLast();
+    public int removeLast(){
+        return bigInt.removeLast();
     }
 
     @Override
     public String toString() {
         String unNumeroString = "";
-        for (Integer unDigito : unNumero) {
+        for (Integer unDigito : bigInt) {
             unNumeroString += unDigito.toString();
         }
         return unNumeroString;
