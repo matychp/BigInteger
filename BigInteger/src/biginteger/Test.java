@@ -12,12 +12,12 @@ public class Test {
         Scanner in = new Scanner(System.in);
         
         BigInteger unBIconString = new BigInteger("0000123");
-        System.out.println(unBIconString.toString());
+        System.out.println("String: " + unBIconString.toString());
         
-        //int unArreglo[] = {1,2,3,4,5,6,7,8,9};
-        int unArreglo[] = {0,0,0,0,0,0,0,0};
+        int unArreglo[] = {1,2,3,4,5,6,7,8,9};
+        //int unArreglo[] = {0,0,0,0,0,0,0,0};
         BigInteger unBIconArreglo = new BigInteger(unArreglo);
-        System.out.println(unBIconArreglo.toString());
+        System.out.println("Arreglo: " + unBIconArreglo.toString());
         
         /*
         System.out.print("Ingrese la cantidad de elementos del arreglo: ");
@@ -34,13 +34,12 @@ public class Test {
         System.out.println(unBIconArregloPorTeclado.toString());
         //*/
         
-        BigInteger unBIA = new BigInteger("1123");
-        BigInteger unBIB = new BigInteger("22947");
-        System.out.println(unBIA.suma(unBIB));
+        BigInteger unBIA = new BigInteger("123");
+        BigInteger unBIB = new BigInteger("123");
+        System.out.println("Suma: " + unBIA.suma(unBIB));
         
-        BigInteger unBIAA = new BigInteger("1123");
-        BigInteger unBIBB = new BigInteger("123");
-        
-        System.out.println(unBIAA.equals(unBIBB));        
+        BigInteger unBIAA = new BigInteger("004456");
+        BigInteger unBIBB = new BigInteger("123456");
+        System.out.println("Son iguales?: " + unBIAA.equals(unBIBB));        
     }
 }

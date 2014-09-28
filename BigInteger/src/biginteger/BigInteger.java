@@ -46,7 +46,7 @@ public class BigInteger {
         bigInt = new LinkedList<>();
 
         for (Integer unDigito : val) {
-            bigInt.add(unDigito);
+            bigInt.addLast(unDigito);
         }
         this.limpiarCeros();
     }
@@ -122,6 +122,7 @@ public class BigInteger {
     /**
      * Retorna el ultimo digito de un numero (es decir el ubicado a la derecha).
      * Se utiliza en el metodo suma()
+     *
      * @return el ultimo digito del numero.
      */
     public int removeLast() {
@@ -155,18 +156,31 @@ public class BigInteger {
         }
     }
 
+    /**
+     * Compara dos numeros, si son iguales retorna true, si no, retorna false
+     *
+     * @param val BigInteger a comparar contra el BigInteger this.
+     * @return true si son iguales, false si son distintos.
+     */
     public boolean equals(BigInteger val) {
         BigInteger auxVal = val;
-        LinkedList<Integer> auxThis = bigInt;
+        BigInteger auxThis = this;
 
         int intLastVal, intLastThis;
         boolean distintos = false;
-        while ((auxVal.size() != 0 && auxThis.size() != 0) || distintos == true) {
-            intLastVal = auxVal.removeLast();
-            intLastThis = auxThis.removeLast();
-            if (intLastVal != intLastThis) {
-                distintos = true;
+        if (auxVal.size() == auxThis.size()) {
+            int contador = auxVal.size();
+            while (distintos == false && contador > 0) {
+                intLastVal = auxVal.removeLast();
+                intLastThis = auxThis.removeLast();
+                if (intLastVal != intLastThis) {
+                    distintos = true;
+                }
+                contador--;
             }
+        }
+        else{
+            distintos = true;
         }
         return !distintos;
     }
