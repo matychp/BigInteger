@@ -61,7 +61,7 @@ public class BigInteger {
      */
     public BigInteger suma(BigInteger val) {
         BigInteger auxVal = val;
-        LinkedList<Integer> auxThis = bigInt;
+        BigInteger auxThis = this;
         BigInteger suma = new BigInteger();
         suma.clear();
 
@@ -74,15 +74,13 @@ public class BigInteger {
             } else {
                 sumaParcial = 0;
             }
+            intLastVal = 0;
+            intLastThis = 0;
             if (auxVal.size() != 0) {
                 intLastVal = auxVal.removeLast();
-            } else {
-                intLastVal = 0;
             }
             if (auxThis.size() != 0) {
                 intLastThis = auxThis.removeLast();
-            } else {
-                intLastThis = 0;
             }
             sumaParcial += intLastThis + intLastVal;
             if (sumaParcial >= 10) {
@@ -123,7 +121,7 @@ public class BigInteger {
 
     /**
      * Retorna el ultimo digito de un numero (es decir el ubicado a la derecha).
-     *
+     * Se utiliza en el metodo suma()
      * @return el ultimo digito del numero.
      */
     public int removeLast() {
@@ -152,8 +150,24 @@ public class BigInteger {
      * izquierda sea mayor a 0.
      */
     public void limpiarCeros() {
-            while (bigInt.size() > 1 && bigInt.getFirst() == 0) {//Elimina siempre y cuando exista más de un digito. (Para evitar que el numero entero 0 no sea borrado).
-                bigInt.removeFirst();
+        while (bigInt.size() > 1 && bigInt.getFirst() == 0) {//Elimina siempre y cuando exista más de un digito. (Para evitar que el numero entero 0 no sea borrado).
+            bigInt.removeFirst();
         }
+    }
+
+    public boolean equals(BigInteger val) {
+        BigInteger auxVal = val;
+        LinkedList<Integer> auxThis = bigInt;
+
+        int intLastVal, intLastThis;
+        boolean distintos = false;
+        while ((auxVal.size() != 0 && auxThis.size() != 0) || distintos == true) {
+            intLastVal = auxVal.removeLast();
+            intLastThis = auxThis.removeLast();
+            if (intLastVal != intLastThis) {
+                distintos = true;
+            }
+        }
+        return !distintos;
     }
 }
