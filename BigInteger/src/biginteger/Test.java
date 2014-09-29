@@ -34,11 +34,19 @@ public class Test {
         System.out.println("BigInteger Arreglo cargado por teclado: " + unBIconArregloPorTeclado.toString());        
         
         System.out.print("Ingrese un numero A a sumar: ");
-        String unNumeroA = in.next();
-        BigInteger biA = new BigInteger(unNumeroA);
+        String unNumeroAsumar = in.next();
+        BigInteger biAsumar = new BigInteger(unNumeroAsumar);
         System.out.print("Ingrese un numero B a sumar: ");
-        String unNumeroB = in.next();
-        BigInteger biB = new BigInteger(unNumeroB);
-        System.out.println("Suma: " + biA.suma(biB));
+        String unNumeroBsumar = in.next();
+        BigInteger biBsumar = new BigInteger(unNumeroBsumar);
+        System.out.println("Suma: " + biAsumar.suma(biBsumar));
+        
+        System.out.print("Ingrese un numero A a comparar: ");
+        String unNumeroAcomparar = in.next();
+        BigInteger biAcomparar = new BigInteger(unNumeroAcomparar);
+        System.out.print("Ingrese un numero B a comparar: ");
+        String unNumeroBcomparar = in.next();
+        BigInteger biBcomparar = new BigInteger(unNumeroBcomparar);
+        System.out.println("Son iguales?: " + biAcomparar.equals(biBcomparar));
     }
 }
