@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 
 public class DoubleList<E extends Comparable> implements Iterable<E> {
 
-    private Node<E> frente, fondo;
+    private DoubleNode<E> frente, fondo;
     private int cantidad;
 
     /**
@@ -35,7 +35,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
             return;
         }
 
-        Node<E> nn = new Node<>(x, frente, null);
+        DoubleNode<E> nn = new DoubleNode<>(x, frente, null);
         if (frente != null) {
             frente.setPrevious(nn);
         }
@@ -59,7 +59,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
             return;
         }
 
-        Node< E> nn = new Node<>(x, null, fondo);
+        DoubleNode< E> nn = new DoubleNode<>(x, null, fondo);
         if (fondo != null) {
             fondo.setNext(nn);
         }
@@ -90,7 +90,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      * @param x el objeto a buscar.
      */
     public boolean contains(E x) {
-        Node<E> p = frente;
+        DoubleNode<E> p = frente;
         while (p != null && x.compareTo(p.getInfo()) != 0) {
             p = p.getNext();
         }
@@ -114,13 +114,13 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
         }
 
         if (index >= (cantidad / 2)) {
-            Node<E> p = fondo;
+            DoubleNode<E> p = fondo;
             for (int i = cantidad - 1; i > index; i--) {
                 p = p.getPrevious();
             }
             return p.getInfo();
         } else {
-            Node<E> n = frente;
+            DoubleNode<E> n = frente;
             for (int i = 0; i < index; i++) {
                 n = n.getNext();
             }
@@ -166,7 +166,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      */
     public int indexOf(E x) {
         int c = 0;
-        for (Node<E> p = frente; p != null; p = p.getNext()) {
+        for (DoubleNode<E> p = frente; p != null; p = p.getNext()) {
             if (x.compareTo(p.getInfo()) == 0) {
                 return c;
             }
@@ -191,11 +191,22 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      */
     @Override
     public Iterator<E> iterator() {
-        return new DoubleListIterator();
+        return new DoubleListIteratorNext();
     }
     
-    public Iterator<E> iterator(boolean unSentido) {
-        return new DoubleListIterator(unSentido);
+    /**
+     * true: sentido horario, de izquierda a derecha, por lo tanto avanza usando los atributos next de los DoubleNode.
+     * false: sentido antihorario, de derecha a izquierda, avanza con los atributos previous.
+     * @param unSentido true: izquierda a derecha, false: derecha a izquierda.
+     * @return 
+     */
+    public Iterator<E> iterator(boolean unSentido){        
+        if(unSentido == true){
+            return new DoubleListIteratorNext();
+        }
+        else{
+            return new DoubleListIteratorPrevious();
+        }
     }
 
     /**
@@ -208,7 +219,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      * @return true si la eliminacion pudo hacerse, false en caso contrario.
      */
     public boolean remove(E x) {
-        Node<E> p = frente, q = null;
+        DoubleNode<E> p = frente, q = null;
         while (p != null && x.compareTo(p.getInfo()) != 0) {
             q = p;
             p = p.getNext();
@@ -243,7 +254,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
             throw new IndexOutOfBoundsException("Indice fuera del rango");
         }
 
-        Node<E> p = frente, q = null;
+        DoubleNode<E> p = frente, q = null;
         for (int i = 0; i < index; i++) {
             q = p;
             p = p.getNext();
@@ -330,7 +341,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      * @return una referencia al objeto encontrado en la lista.
      */
     public E search(E x) {
-        for (Node<E> p = frente; p != null; p = p.getNext()) {
+        for (DoubleNode<E> p = frente; p != null; p = p.getNext()) {
             if (x.compareTo(p.getInfo()) == 0) {
                 return p.getInfo();
             }
@@ -358,14 +369,14 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
 
         E ant;
         if (index >= (cantidad / 2)) {
-            Node<E> p = fondo;
+            DoubleNode<E> p = fondo;
             for (int i = cantidad - 1; i > index; i--) {
                 p = p.getPrevious();
             }
             ant = p.getInfo();
             p.setInfo(x);
         } else {
-            Node<E> n = frente;
+            DoubleNode<E> n = frente;
             for (int i = 0; i < index; i++) {
                 n = n.getNext();
             }
@@ -391,7 +402,7 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
      */
     @Override
     public String toString() {
-        Node<E> p = frente;
+        DoubleNode<E> p = frente;
         String res = "[";
         while (p != null) {
             res = res + p.toString();
@@ -407,25 +418,16 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
     /**
      * Clase interna para implementar el iterador.
      */
-    private class DoubleListIterator implements Iterator<E> {
+    private class DoubleListIteratorNext implements Iterator<E> {
 
-        private Node<E> actual;          // patron Iterator: direccion del nodo que toca procesar.
-        private Node<E> previo;          // direccion del nodo anterior al actual.
-        private boolean next_invocado;   // true: next fue invocado (usado por remove()...)
-        private boolean sentido;          // true: va para derecha, false: va para la izquierda.
+        private DoubleNode<E> actual;          // patron Iterator: direccion del nodo que toca procesar.
+        private DoubleNode<E> previo;          // direccion del nodo anterior al actual.
+        private boolean next_invocado;         // true: next fue invocado (usado por remove()...)
 
-        public DoubleListIterator() {
+        public DoubleListIteratorNext() {
             actual = null;
             previo = null;
             next_invocado = false;
-            sentido = true;
-        }
-
-        public DoubleListIterator(boolean unSentido) {
-            actual = null;
-            previo = null;
-            next_invocado = false;
-            sentido = unSentido;
         }
 
         /**
@@ -437,23 +439,13 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
          */
         @Override
         public boolean hasNext() {
-            if (sentido == true) {
-                if (frente == null && fondo == null) {
-                    return false;
-                }
-                if (actual != null && actual.getNext() == null) {
-                    return false;
-                }
-                return true;
-            } else {
-                if (frente == null && fondo == null) {
-                    return false;
-                }
-                if (actual != null && actual.getPrevious() == null) {
-                    return false;
-                }
-                return true;
+            if (frente == null && fondo == null) {
+                return false;
             }
+            if (actual != null && actual.getNext() == null) {
+                return false;
+            }
+            return true;
         }
 
         /**
@@ -466,26 +458,14 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
          */
         @Override
         public E next() {
-            if (sentido == true) {
-                if (!hasNext()) {
-                    throw new NoSuchElementException("No quedan elementos por recorrer");
-                }
-                if (actual == null) {
-                    actual = frente;
-                } else {
-                    previo = actual;
-                    actual = actual.getNext();
-                }
+            if (!hasNext()) {
+                throw new NoSuchElementException("No quedan elementos por recorrer");
+            }
+            if (actual == null) {
+                actual = frente;
             } else {
-                if (!hasNext()) {
-                    throw new NoSuchElementException("No quedan elementos por recorrer");
-                }
-                if (actual == null) {
-                    actual = fondo;
-                } else {
-                    previo = actual;
-                    actual = actual.getPrevious();
-                }
+                previo = actual;
+                actual = actual.getNext();
             }
             next_invocado = true;
             return actual.getInfo();
@@ -505,20 +485,91 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
             if (!next_invocado) {
                 throw new IllegalStateException("Debe invocar a next() antes de remove()...");
             }
-
-            if (sentido == true) {
-                if (previo == null) {
-                    frente = actual.getNext();
-                } else {
-                    previo.setNext(actual.getNext());
-                }
+            if (previo == null) {
+                frente = actual.getNext();
             } else {
-                if (previo == null) {
-                    fondo = actual.getPrevious();
-                } else {
-                    previo.setPrevious(actual.getPrevious());
-                }
+                previo.setNext(actual.getNext());
+            }
+            actual = previo;
+            next_invocado = false;
+            cantidad--;
+        }
+    }
 
+    /**
+     * Clase interna para implementar el iterador.
+     */
+    private class DoubleListIteratorPrevious implements Iterator<E> {
+
+        private DoubleNode<E> actual;          // patron Iterator: direccion del nodo que toca procesar.
+        private DoubleNode<E> previo;          // direccion del nodo anterior al actual.
+        private boolean next_invocado;         // true: next fue invocado (usado por remove()...)
+
+        public DoubleListIteratorPrevious() {
+            actual = null;
+            previo = null;
+            next_invocado = false;
+        }
+
+        /**
+         * Indica si queda algun objeto en el recorrido del iterador.
+         *
+         *
+         * @return true si queda algun objeto en el recorrido - false si no
+         * quedan objetos.
+         */
+        @Override
+        public boolean hasNext() {
+            if (frente == null && fondo == null) {
+                return false;
+            }
+            if (actual != null && actual.getPrevious() == null) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * Retorna el siguiente objeto en el recorrido del iterador.
+         *
+         *
+         * @return el siguiente objeto en el recorrido.
+         * @throws NoSuchElementException si la lista esta vacia o en la lista
+         * no quedan elementos por recorrer.
+         */
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No quedan elementos por recorrer");
+            }
+            if (actual == null) {
+                actual = fondo;
+            } else {
+                previo = actual;
+                actual = actual.getPrevious();
+            }
+            next_invocado = true;
+            return actual.getInfo();
+        }
+
+        /**
+         * Elimina el ultimo elemento que retorno el iterador. Debe invocarse
+         * primero a next(). El iterador queda posicionado en el elemento
+         * anterior al eliminado.
+         *
+         * @throws IllegalStateException si se invoca a remove() sin haber
+         * invocado a next(), o si remove fue invocado mas de una vez luego de
+         * una invocacion a next().
+         */
+        @Override
+        public void remove() {
+            if (!next_invocado) {
+                throw new IllegalStateException("Debe invocar a next() antes de remove()...");
+            }
+            if (previo == null) {
+                fondo = actual.getPrevious();
+            } else {
+                previo.setPrevious(actual.getPrevious());
             }
             actual = previo;
             next_invocado = false;
