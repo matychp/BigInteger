@@ -1,6 +1,7 @@
 package biginteger;
 
 import java.util.LinkedList;
+import java.util.Iterator;
 
 /**
  *
@@ -8,14 +9,16 @@ import java.util.LinkedList;
  */
 public class BigInteger {
 
-    private LinkedList<Integer> bigInt;
+    //private LinkedList<Integer> bigInt;
+    private DoubleList<Integer> bigInt;
 
     /**
      * Constructor sin parametros que crea un numero valiendo 0.
      */
     public BigInteger() {
-        bigInt = new LinkedList<>();
-        bigInt.add(0);
+//        bigInt = new LinkedList<>();
+        bigInt = new DoubleList<>();
+        bigInt.addFirst(0);
     }
 
     /**
@@ -24,7 +27,8 @@ public class BigInteger {
      * @param val String que contiene el numero a almacenar como BigInteger.
      */
     public BigInteger(String val) {
-        bigInt = new LinkedList<>();
+//        bigInt = new LinkedList<>();
+        bigInt = new DoubleList<>();
 
         String aux;
         for (char letra : val.toCharArray()) {//El ciclo for se encarga de tomar cada caracter del String. Primero toma el primer caracter del String, y asi, hasta el ultimo caracter.
@@ -43,7 +47,8 @@ public class BigInteger {
      * numero a almacenar como BigInteger.
      */
     public BigInteger(int val[]) {
-        bigInt = new LinkedList<>();
+//        bigInt = new LinkedList<>();
+        bigInt = new DoubleList<>();
 
         for (Integer unDigito : val) {
             bigInt.addLast(unDigito);
@@ -60,29 +65,30 @@ public class BigInteger {
      * @return un BigInteger con la suma de this + parametro.
      */
     public BigInteger suma(BigInteger val) {
-        BigInteger auxVal = val;
-        BigInteger auxThis = this;
         BigInteger suma = new BigInteger();
         suma.clear();
 
-        int intLastVal, intLastThis, sumaParcial;
+        Iterator itA = this.iterator(false);
+        Iterator itB = val.iterator(false);
+
         boolean carry = false;
-        while (auxVal.size() != 0 || auxThis.size() != 0 || carry == true) {
+        int intLastB, intLastA, sumaParcial;
+        while (itA.hasNext() || itB.hasNext() || carry == true) {
             if (carry == true) {
                 sumaParcial = 1;
                 carry = false;
             } else {
                 sumaParcial = 0;
             }
-            intLastVal = 0;
-            intLastThis = 0;
-            if (auxVal.size() != 0) {
-                intLastVal = auxVal.removeLast();
+            intLastB = 0;
+            intLastA = 0;
+            if (itA.hasNext()) {
+                intLastA = (Integer) itA.next();
             }
-            if (auxThis.size() != 0) {
-                intLastThis = auxThis.removeLast();
+            if (itB.hasNext()) {
+                intLastB = (Integer) itB.next();
             }
-            sumaParcial += intLastThis + intLastVal;
+            sumaParcial += intLastA + intLastB;
             if (sumaParcial >= 10) {
                 sumaParcial -= 10;
                 carry = true;
@@ -137,8 +143,9 @@ public class BigInteger {
     @Override
     public String toString() {
         String unNumeroString = "";
-        for (Integer unDigito : bigInt) {
-            unNumeroString += unDigito.toString();
+        Iterator it = bigInt.iterator(true);
+        while (it.hasNext()) {
+            unNumeroString += it.next().toString();
         }
         return unNumeroString;
     }
@@ -157,31 +164,33 @@ public class BigInteger {
     }
 
     /**
+     * Crea un iterador para recorrer el BigInteger.
+     *
+     * @param sentido
+     * @return
+     */
+    public Iterator iterator(boolean sentido) {
+        return this.bigInt.iterator(sentido);
+    }
+
+    /**
      * Compara dos numeros, si son iguales retorna true, si no, retorna false
      *
      * @param val BigInteger a comparar contra el BigInteger this.
      * @return true si son iguales, false si son distintos.
      */
     public boolean equals(BigInteger val) {
-        BigInteger auxVal = val;
-        BigInteger auxThis = this;
-
-        int intLastVal, intLastThis;
-        boolean distintos = false;
-        if (auxVal.size() == auxThis.size()) {
-            int contador = auxVal.size();
-            while (distintos == false && contador > 0) {
-                intLastVal = auxVal.removeLast();
-                intLastThis = auxThis.removeLast();
-                if (intLastVal != intLastThis) {
-                    distintos = true;
+        if (this.size() == val.size()) {
+            Iterator itA = this.iterator(false);
+            Iterator itB = val.iterator(false);
+            
+            while(itA.hasNext() && itB.hasNext()){
+                if(itA.next() != itB.next()){
+                    return false;
                 }
-                contador--;
             }
+            return true;
         }
-        else{
-            distintos = true;
-        }
-        return !distintos;
+        return false;
     }
 }
