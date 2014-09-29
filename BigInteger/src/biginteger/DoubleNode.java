@@ -1,5 +1,9 @@
 package biginteger;
 
+/**
+ *
+ * @author matychp
+ */
 public class DoubleNode < E extends Comparable >
 {
    private E info;

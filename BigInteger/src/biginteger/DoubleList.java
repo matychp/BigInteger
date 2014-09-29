@@ -3,6 +3,10 @@ package biginteger;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ *
+ * @author matychp
+ */
 public class DoubleList<E extends Comparable> implements Iterable<E> {
 
     private DoubleNode<E> frente, fondo;
