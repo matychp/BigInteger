@@ -1,12 +1,5 @@
 package biginteger;
 
-/**
- * Una lista generica. Empleamos generics para control de homogeneidad. Tambien
- * se incluye la implementacion del patron Iterator.
- *
- * @author Ing. Valerio Frittelli.
- * @version Agosto de 2013.
- */
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -185,8 +178,8 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
     }
 
     /**
-     * Retorna un iterado
-     *
+     * Retorna un iterado ascendete.
+     * En sentido horario, o  de izquierda a derecha.
      * @return r para la lista.
      */
     @Override
@@ -195,18 +188,12 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
     }
     
     /**
-     * true: sentido horario, de izquierda a derecha, por lo tanto avanza usando los atributos next de los DoubleNode.
-     * false: sentido antihorario, de derecha a izquierda, avanza con los atributos previous.
-     * @param unSentido true: izquierda a derecha, false: derecha a izquierda.
+     * Retorna un iterador descendiente.
+     * En sentido antihorario, o de derecha a izquierda.
      * @return 
      */
-    public Iterator<E> iterator(boolean unSentido){        
-        if(unSentido == true){
-            return new DoubleListIteratorNext();
-        }
-        else{
-            return new DoubleListIteratorPrevious();
-        }
+    public Iterator<E> descendingIterator() {
+        return new DoubleListIteratorPrevious();
     }
 
     /**
