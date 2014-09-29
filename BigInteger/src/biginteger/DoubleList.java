@@ -193,6 +193,10 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new DoubleListIterator();
     }
+    
+    public Iterator<E> iterator(boolean unSentido) {
+        return new DoubleListIterator(unSentido);
+    }
 
     /**
      * Remueve el primer nodo de la lista que contenga al objeto x si el mismo
@@ -433,13 +437,23 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
          */
         @Override
         public boolean hasNext() {
-            if (frente == null) {
-                return false;
+            if (sentido == true) {
+                if (frente == null && fondo == null) {
+                    return false;
+                }
+                if (actual != null && actual.getNext() == null) {
+                    return false;
+                }
+                return true;
+            } else {
+                if (frente == null && fondo == null) {
+                    return false;
+                }
+                if (actual != null && actual.getPrevious() == null) {
+                    return false;
+                }
+                return true;
             }
-            if (actual != null && actual.getNext() == null) {
-                return false;
-            }
-            return true;
         }
 
         /**
@@ -452,18 +466,28 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
          */
         @Override
         public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No quedan elementos por recorrer");
-            }
-
-            if (actual == null) {
-                actual = frente;
+            if (sentido == true) {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("No quedan elementos por recorrer");
+                }
+                if (actual == null) {
+                    actual = frente;
+                } else {
+                    previo = actual;
+                    actual = actual.getNext();
+                }
             } else {
-                previo = actual;
-                actual = actual.getNext();
+                if (!hasNext()) {
+                    throw new NoSuchElementException("No quedan elementos por recorrer");
+                }
+                if (actual == null) {
+                    actual = fondo;
+                } else {
+                    previo = actual;
+                    actual = actual.getPrevious();
+                }
             }
             next_invocado = true;
-
             return actual.getInfo();
         }
 
@@ -482,12 +506,20 @@ public class DoubleList<E extends Comparable> implements Iterable<E> {
                 throw new IllegalStateException("Debe invocar a next() antes de remove()...");
             }
 
-            if (previo == null) {
-                frente = actual.getNext();
+            if (sentido == true) {
+                if (previo == null) {
+                    frente = actual.getNext();
+                } else {
+                    previo.setNext(actual.getNext());
+                }
             } else {
-                previo.setNext(actual.getNext());
-            }
+                if (previo == null) {
+                    fondo = actual.getPrevious();
+                } else {
+                    previo.setPrevious(actual.getPrevious());
+                }
 
+            }
             actual = previo;
             next_invocado = false;
             cantidad--;
