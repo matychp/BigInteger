@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public class BigInteger {
 
-    //private LinkedList<Integer> bigInt;
+//    private LinkedList<Integer> bigInt;
     private DoubleList<Integer> bigInt;
 
     /**
@@ -68,8 +68,8 @@ public class BigInteger {
         BigInteger suma = new BigInteger();
         suma.clear();
 
-        Iterator itA = this.iterator(false);
-        Iterator itB = val.iterator(false);
+        Iterator itA = this.descendingIterator();
+        Iterator itB = val.descendingIterator();
 
         boolean carry = false;
         int intLastB, intLastA, sumaParcial;
@@ -143,7 +143,8 @@ public class BigInteger {
     @Override
     public String toString() {
         String unNumeroString = "";
-        Iterator it = bigInt.iterator(true);
+        Iterator it = bigInt.iterator();
+        
         while (it.hasNext()) {
             unNumeroString += it.next().toString();
         }
@@ -164,15 +165,21 @@ public class BigInteger {
     }
 
     /**
-     * Crea un iterador para recorrer el BigInteger.
-     *
-     * @param sentido
+     * Crea un iterador para recorrer el BigInteger de izquierda a derecha.
      * @return
      */
-    public Iterator iterator(boolean sentido) {
-        return this.bigInt.iterator(sentido);
+    public Iterator iterator() {
+        return this.bigInt.iterator();
     }
 
+    /**
+     * Crea un iterador para recorrer el BigInteger de derecha a izquierda.
+     * @return
+     */
+    public Iterator descendingIterator() {
+        return this.bigInt.descendingIterator();
+    }
+    
     /**
      * Compara dos numeros, si son iguales retorna true, si no, retorna false
      *
@@ -181,8 +188,8 @@ public class BigInteger {
      */
     public boolean equals(BigInteger val) {
         if (this.size() == val.size()) {
-            Iterator itA = this.iterator(false);
-            Iterator itB = val.iterator(false);
+            Iterator itA = this.iterator();
+            Iterator itB = val.iterator();
             
             while(itA.hasNext() && itB.hasNext()){
                 if(itA.next() != itB.next()){

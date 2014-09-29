@@ -2,10 +2,6 @@ package biginteger;
 
 import java.util.Scanner;
 
-/**
- *
- * @author matychp
- */
 public class Test {
 
     public static void main(String[] args) {
